@@ -30,6 +30,7 @@ if not vim.loop.fs_stat(lazypath) then
   })
 end
 vim.opt.rtp:prepend(lazypath)
+
 vim.g.mapleader = ' '
 
 vim.opt.guifont = { 'JetbrainsMono Nerd Font', ':h15' }
@@ -40,6 +41,8 @@ vim.cmd [[
     filetype plugin indent on
     syntax on
 ]]
+
+opt.updatetime = 250
 -- line number
 opt.number = true
 
@@ -78,11 +81,6 @@ opt.showmode = false
 
 -- auto completion menu height
 vim.opt.pumheight = 10
-
-vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
-vim.keymap.set('n', '<leader><Tab>', ':bn<CR>', { desc = 'Next buffer' })
-vim.keymap.set('n', '<leader><S-Tab>', ':bp<CR>', { desc = 'Prev buffer' })
-vim.keymap.set('n', '<leader>bd', ':bd<CR>', { desc = 'Delete buffer' })
 
 require('lazy').setup('plugins');
 
@@ -142,4 +140,6 @@ vim.api.nvim_create_user_command('CreateNewFileFromPrompt', function()
   end,
   {})
 
-vim.keymap.set('n', '<C-s>', '<Cmd>CreateNewFileFromPrompt<CR>')
+
+
+require('keymaps')

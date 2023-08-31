@@ -61,25 +61,6 @@ return {
     },
   },
   {
-    'lewis6991/hover.nvim',
-    config = function()
-      require('hover').setup {
-        init = function()
-          require('hover.providers.lsp')
-        end,
-        preview_opts = {
-          border = nil
-        },
-        preview_window = false,
-        title = true
-      }
-
-      -- Setup keymaps
-      vim.keymap.set('n', 'K', require('hover').hover, { desc = 'hover.nvim' })
-      vim.keymap.set('n', 'gK', require('hover').hover_select, { desc = 'hover.nvim (select)' })
-    end
-  },
-  {
     'kdheepak/lazygit.nvim',
     dependencies = {
       'nvim-telescope/telescope.nvim',
@@ -125,8 +106,51 @@ return {
 
       lsp.on_attach(function(client, bufnr)
         lsp.default_keymaps({ buffer = bufnr })
-        lsp.buffer_autoformat()
+        if client.server_capabilities.hoverProvider then
+          vim.keymap.set('n', 'K', vim.lsp.buf.hover, { buffer = bufnr })
+        end
+
+        if client.server_capabilities.documentHighlightProvider then
+          vim.api.nvim_create_augroup('lsp_document_highlight', {
+            clear = false
+          })
+          vim.api.nvim_clear_autocmds({
+            buffer = bufnr,
+            group = 'lsp_document_highlight',
+          })
+          vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
+            group = 'lsp_document_highlight',
+            buffer = bufnr,
+            callback = vim.lsp.buf.document_highlight,
+          })
+          vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
+            group = 'lsp_document_highlight',
+            buffer = bufnr,
+            callback = vim.lsp.buf.clear_references,
+          })
+        end
+
+        vim.api.nvim_create_autocmd('CursorHold', {
+          buffer = bufnr,
+          callback = function()
+            local opts = {
+              focusable = false,
+              close_events = { 'BufLeave', 'CursorMoved', 'InsertEnter', 'FocusLost' },
+              border = 'rounded',
+              source = 'always',
+              prefix = ' ',
+              scope = 'cursor',
+            }
+            vim.diagnostic.open_float(nil, opts)
+          end
+        })
       end)
+
+      lsp.format_on_save({
+        servers = {
+          ['lua_ls'] = { 'lua' }
+        }
+      })
 
       lsp.set_sign_icons({
         error = '✘',
@@ -279,13 +303,15 @@ return {
 
       vim.keymap.set('n', '<leader>ss', builtin.current_buffer_fuzzy_find, {})
 
-      vim.keymap.set('n', '<leader>sf', builtin.find_files, {})
-      vim.keymap.set('n', '<leader>sg', builtin.live_grep, {})
-      vim.keymap.set('n', '<leader>sb', builtin.buffers, {})
-      vim.keymap.set('n', '<leader>sh', builtin.help_tags, {})
+      vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch in [F]iles' })
+      vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
+      vim.keymap.set('n', '<leader>sb', builtin.buffers, { desc = '[S]earch in [B]uffers' })
+      vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch in [H]elp' })
 
-      vim.keymap.set('n', '<leader>sd', builtin.lsp_definitions, {})
-      vim.keymap.set('n', '<leader>si', builtin.lsp_implementations, {})
+      vim.keymap.set('n', '<leader>sd', builtin.lsp_definitions, { desc = '[S]earch in [D]efinitions' })
+      vim.keymap.set('n', '<leader>si', builtin.lsp_implementations, { desc = '[S]earch for [I]mplimentations' })
+
+      vim.keymap.set('n', '<C-d>', builtin.diagnostics, { desc = 'Diagnostics' })
     end
   },
   {
