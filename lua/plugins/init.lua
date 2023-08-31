@@ -23,24 +23,6 @@ return {
     'goolord/alpha-nvim',
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     config = function()
-      local buttons = {
-        type = 'group',
-        val = {
-          { type = 'text', val = 'Quick links', opts = { hl = 'SpecialComment', position = 'center' } },
-        }
-      }
-      local theta = require('alpha.themes.dashboard')
-      theta.section.buttons.val = {
-        theta.button('e', '  New file', '<cmd>ene<CR>'),
-        theta.button('<leader> s f', '󰈞  Find file'),
-        theta.button('<leader> s g', '󰊄  Live grep'),
-        theta.button('c', '  Configuration', '<cmd>tabnew $MYVIMRC <bar> tcd %:h<cr>'),
-        theta.button('u', '  Update plugins', '<cmd>Lazy sync<CR>'),
-        theta.button('q', '󰅚  Quit', '<cmd>qa<CR>'),
-        theta.button('<S-F6>', ' Toggle Transparent Background', '<cmd>TransparentToggle<CR>'),
-        theta.button('<leader> g g', '󰊢 Lazy[G]it', ':LazyGit<CR>')
-      }
-      -- require 'alpha'.setup(theta.opts)
       require('alpha').setup(require('alpha.themes.startify').config)
     end
   },
@@ -83,19 +65,11 @@ return {
     config = function()
       require('hover').setup {
         init = function()
-          -- Require providers
           require('hover.providers.lsp')
-          -- require('hover.providers.gh')
-          -- require('hover.providers.gh_user')
-          -- require('hover.providers.jira')
-          -- require('hover.providers.man')
-          -- require('hover.providers.dictionary')
         end,
         preview_opts = {
           border = nil
         },
-        -- Whether the contents of a currently open hover window should be moved
-        -- to a :h preview-window when pressing the hover keymap.
         preview_window = false,
         title = true
       }
@@ -112,8 +86,7 @@ return {
       'nvim-lua/plenary.nvim',
     },
     config = function()
-      require('telescope').load_extension 'lazygit'
-      vim.keymap.set('n', '<leader>gg', ':LazyGit<CR>', { desc = 'Open lazygit' })
+      vim.keymap.set('n', '<leader>gg', ':LazyGitCurrentFile<CR>', { desc = 'Open lazygit' })
     end,
   },
   {
@@ -302,19 +275,17 @@ return {
       },
     },
     config = function()
-      pcall(require('telescope').load_extension, 'fzf')
-      vim.keymap.set('n', '<leader>ss', function()
-        require('telescope.builtin').current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
-          winblend = 10,
-          previewer = false
-        })
-      end)
-      vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
-      vim.keymap.set('n', '<leader>sr', require('telescope.builtin').oldfiles, { desc = '[S]earch [R]ecent' })
-      vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
-      vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
-      vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
-      vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
+      local builtin = require('telescope.builtin')
+
+      vim.keymap.set('n', '<leader>ss', builtin.current_buffer_fuzzy_find, {})
+
+      vim.keymap.set('n', '<leader>sf', builtin.find_files, {})
+      vim.keymap.set('n', '<leader>sg', builtin.live_grep, {})
+      vim.keymap.set('n', '<leader>sb', builtin.buffers, {})
+      vim.keymap.set('n', '<leader>sh', builtin.help_tags, {})
+
+      vim.keymap.set('n', '<leader>sd', builtin.lsp_definitions, {})
+      vim.keymap.set('n', '<leader>si', builtin.lsp_implementations, {})
     end
   },
   {
