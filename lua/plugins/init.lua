@@ -67,7 +67,7 @@ return {
       'nvim-lua/plenary.nvim',
     },
     config = function()
-      vim.keymap.set('n', '<leader>gg', ':LazyGitCurrentFile<CR>', { desc = 'Open lazygit' })
+      vim.keymap.set('n', '<leader>gg', ':LazyGit<CR>', { desc = 'Open lazygit' })
     end,
   },
   {
@@ -129,21 +129,6 @@ return {
             callback = vim.lsp.buf.clear_references,
           })
         end
-
-        vim.api.nvim_create_autocmd('CursorHold', {
-          buffer = bufnr,
-          callback = function()
-            local opts = {
-              focusable = false,
-              close_events = { 'BufLeave', 'CursorMoved', 'InsertEnter', 'FocusLost' },
-              border = 'rounded',
-              source = 'always',
-              prefix = ' ',
-              scope = 'cursor',
-            }
-            vim.diagnostic.open_float(nil, opts)
-          end
-        })
       end)
 
       lsp.format_on_save({
