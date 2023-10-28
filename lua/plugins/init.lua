@@ -101,7 +101,8 @@ return {
         'graphql',
         'gopls',
         'volar',
-        'tailwindcss'
+        'tailwindcss',
+        'elixirls'
       })
 
       lsp.on_attach(function(client, bufnr)
