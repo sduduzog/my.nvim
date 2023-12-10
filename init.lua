@@ -86,7 +86,7 @@ require('lazy').setup('plugins');
 
 pcall(require, 'options')
 
-vim.cmd.colorscheme 'catppuccin-frappe'
+vim.cmd.colorscheme 'catppuccin-mocha'
 
 
 function split(pString, pPattern)

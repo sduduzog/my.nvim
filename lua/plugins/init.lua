@@ -80,6 +80,8 @@ return {
       { 'hrsh7th/nvim-cmp' },
       { 'hrsh7th/cmp-nvim-lsp' },
       { 'L3MON4D3/LuaSnip' },
+      { 'nvimtools/none-ls.nvim', },
+      { 'MunifTanjim/prettier.nvim' },
       {
         'j-hui/fidget.nvim',
         tag = 'legacy',
@@ -90,6 +92,9 @@ return {
       local lsp = require('lsp-zero').preset({
         name = 'recommended'
       })
+
+      local null_ls = require('null-ls')
+      local null_opts = lsp.build_options('null-ls', {})
 
       local cmp = require('cmp')
 
@@ -105,11 +110,45 @@ return {
         'elixirls'
       })
 
+      local group = vim.api.nvim_create_augroup('lsp_format_on_save', { clear = false })
+      local event = 'BufWritePre'
+      local async = event == 'BufWritePost'
+
+      null_ls.setup({
+        on_attach = function(client, bufnr)
+          if client.supports_method('textDocument/formatting') then
+            vim.api.nvim_clear_autocmds({ buffer = bufnr, group = group })
+            vim.api.nvim_create_autocmd(event, {
+              buffer = bufnr,
+              group = group,
+              callback = function()
+                vim.lsp.buf.format({ bufnr = bufnr, async = async })
+              end,
+              desc = '[lsp] format on save'
+            })
+          end
+        end
+      })
+
+      local prettier = require('prettier')
+
+      prettier.setup({
+        bin = 'prettierd',
+        ['null-ls'] = {
+          condition = function()
+            return prettier.config_exists({
+              check_package_json = true
+            })
+          end
+        }
+      })
+
       lsp.on_attach(function(client, bufnr)
         lsp.default_keymaps({ buffer = bufnr })
         if client.server_capabilities.hoverProvider then
           vim.keymap.set('n', 'K', vim.lsp.buf.hover, { buffer = bufnr })
         end
+
 
         if client.server_capabilities.documentHighlightProvider then
           vim.api.nvim_create_augroup('lsp_document_highlight', {
@@ -178,14 +217,14 @@ return {
 
       lspconfig.graphql.setup {}
 
-      lspconfig.eslint.setup({
+      --[[ lspconfig.eslint.setup({
         on_attach = function(client, bufnr)
           vim.api.nvim_create_autocmd('BufWritePre', {
             buffer = bufnr,
             command = 'EslintFixAll',
           })
         end,
-      })
+      }) ]]
 
       lspconfig.lua_ls.setup(lsp.nvim_lua_ls())
 
@@ -403,9 +442,22 @@ return {
     end
   },
   {
+    'klen/nvim-test',
+    config = function()
+      require('nvim-test').setup {
+        term = 'toggleterm'
+      }
+
+      require('nvim-test.runners.jest'):setup {
+        args = { '--collectCoverage=false' },
+      }
+    end
+  },
+  {
     'catppuccin/nvim',
     name = 'catppuccin',
     lazy = false,
     priority = 1000
   },
+
 }
