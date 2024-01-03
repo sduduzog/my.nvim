@@ -119,7 +119,7 @@ return {
 
 			local lsp_zero = require("lsp-zero")
 
-			lsp_zero.on_attach(function(_, bufnr)
+			lsp_zero.on_attach(function(_, _)
 				lsp_zero.buffer_autoformat()
 			end)
 
@@ -155,6 +155,30 @@ return {
 							unknownAtRules = "ignore",
 						},
 					},
+				},
+			})
+
+			local cmp = require("cmp")
+			local cmp_action = require("lsp-zero").cmp_action()
+			local cmp_format = require("lsp-zero").cmp_format()
+			cmp.setup({
+				preselect = "item",
+				completion = {
+					completeopt = "menu,menuone,noinsert",
+				},
+				sources = {
+					{ name = "nvim_lsp" },
+				},
+				mapping = cmp.mapping.preset.insert({
+					["<CR>"] = cmp.mapping.confirm({ select = false }),
+					["<Tab>"] = cmp_action.luasnip_supertab(),
+					["<S-Tab>"] = cmp_action.luasnip_shift_supertab(),
+				}),
+				formatting = cmp_format,
+				snippet = {
+					expand = function(args)
+						require("luasnip").lsp_expand(args.body)
+					end,
 				},
 			})
 		end,
