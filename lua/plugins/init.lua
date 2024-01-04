@@ -218,28 +218,28 @@ return {
 			vim.keymap.set("n", "K", "<cmd>Lspsaga hover_doc<cr>")
 		end,
 	},
-	{
-		"nvim-lualine/lualine.nvim",
-		opts = {
-			options = {
-				icons_enabled = true,
-				theme = "auto",
-				component_separators = { left = "", right = "" },
-				section_separators = { left = "", right = "" },
-				disabled_filetypes = {
-					packer = {},
-					NvimTree = {},
-					statusline = {},
-					winbar = {},
-				},
-				extensions = {
-					"toggleterm",
-					"nvim-tree",
-					"fzf",
-				},
-			},
-		},
-	},
+	-- {
+	-- 	"nvim-lualine/lualine.nvim",
+	-- 	opts = {
+	-- 		options = {
+	-- 			icons_enabled = true,
+	-- 			theme = "auto",
+	-- 			component_separators = { left = "", right = "" },
+	-- 			section_separators = { left = "", right = "" },
+	-- 			disabled_filetypes = {
+	-- 				packer = {},
+	-- 				NvimTree = {},
+	-- 				statusline = {},
+	-- 				winbar = {},
+	-- 			},
+	-- 			extensions = {
+	-- 				"toggleterm",
+	-- 				"nvim-tree",
+	-- 				"fzf",
+	-- 			},
+	-- 		},
+	-- 	},
+	-- },
 	{
 		"nvim-tree/nvim-tree.lua",
 		version = "*",
@@ -305,16 +305,9 @@ return {
 			local builtin = require("telescope.builtin")
 
 			vim.keymap.set("n", "<leader>ss", builtin.current_buffer_fuzzy_find, {})
-
 			vim.keymap.set("n", "<leader>sf", builtin.find_files, { desc = "[S]earch in [F]iles" })
 			vim.keymap.set("n", "<leader>sg", builtin.live_grep, { desc = "[S]earch by [G]rep" })
 			vim.keymap.set("n", "<leader>sb", builtin.buffers, { desc = "[S]earch in [B]uffers" })
-			vim.keymap.set("n", "<leader>sh", builtin.help_tags, { desc = "[S]earch in [H]elp" })
-
-			vim.keymap.set("n", "<leader>sd", builtin.lsp_definitions, { desc = "[S]earch in [D]efinitions" })
-			vim.keymap.set("n", "<leader>si", builtin.lsp_implementations, { desc = "[S]earch for [I]mplimentations" })
-
-			vim.keymap.set("n", "<C-d>", builtin.diagnostics, { desc = "Diagnostics" })
 		end,
 	},
 	{
@@ -415,52 +408,88 @@ return {
 		end,
 	},
 	{
-		"klen/nvim-test",
-		config = function()
-			require("nvim-test").setup({
-				term = "toggleterm",
-			})
-
-			require("nvim-test.runners.jest"):setup({
-				args = { "--collectCoverage=false" },
-			})
-
-			vim.keymap.set("n", "<leader>t", ":TestNearest<CR>", { desc = "Run nearest test" })
-		end,
-	},
-	{
 		"nvim-neotest/neotest",
 		dependencies = {
 			"nvim-lua/plenary.nvim",
-			"nvim-treesitter/nvim-treesitter",
 			"antoinemadec/FixCursorHold.nvim",
+			"nvim-treesitter/nvim-treesitter",
+			"stevearc/overseer.nvim",
+			"nvim-neotest/neotest-plenary",
 			"nvim-neotest/neotest-jest",
-			"mfussenegger/nvim-dap",
-			"okuuva/auto-save.nvim",
+			"nvim-neotest/neotest-go",
 		},
 		config = function()
-			require("neotest").setup({
+			local neotest = require("neotest")
+			-- require("neotest.logging"):set_level("trace")
+			neotest.setup({
 				adapters = {
 					require("neotest-jest")({
-						jestConfigFile = "jest.config.js",
-						env = { CI = true },
+						cwd = require("neotest-jest").root,
 					}),
-					-- require("neotest-vim-test")({
-					--     ignore_file_types = { "python", "vim", "lua" },
-					-- }),
 				},
-				quickfix = {
+				discovery = {
 					enabled = false,
-					open = false,
 				},
-				output_panel = {
-					open = "rightbelow vsplit | resize 30",
+				consumers = {
+					overseer = require("neotest.consumers.overseer"),
+				},
+				summary = {
+					mappings = {
+						attach = "a",
+						expand = "l",
+						expand_all = "L",
+						jumpto = "gf",
+						output = "o",
+						run = "<C-r>",
+						short = "p",
+						stop = "u",
+					},
+				},
+				icons = {
+					passed = " ",
+					running = " ",
+					failed = " ",
+					unknown = " ",
+					running_animated = vim.tbl_map(function(s)
+						return s .. " "
+					end, { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" }),
+				},
+				diagnostic = {
+					enabled = true,
+				},
+				output = {
+					enabled = true,
+					open_on_run = false,
 				},
 				status = {
-					virtual_text = false,
-					signs = true,
+					enabled = true,
 				},
 			})
+
+			vim.keymap.set("n", "<leader>tn", function()
+				neotest.run.run({})
+			end)
+
+			vim.keymap.set("n", "<leader>tt", function()
+				neotest.run.run({ vim.api.nvim_buf_get_name(0) })
+			end)
+			vim.keymap.set("n", "<leader>ta", function()
+				for _, adapter_id in ipairs(neotest.run.adapters()) do
+					neotest.run.run({ suite = true, adapter = adapter_id })
+				end
+			end)
+			vim.keymap.set("n", "<leader>tl", function()
+				neotest.run.run_last()
+			end)
+			vim.keymap.set("n", "<leader>td", function()
+				neotest.run.run({ strategy = "dap" })
+			end)
+			vim.keymap.set("n", "<leader>tp", function()
+				neotest.summary.toggle()
+			end)
+			vim.keymap.set("n", "<leader>to", function()
+				neotest.output.open({ short = true })
+			end)
 		end,
 	},
 	{
