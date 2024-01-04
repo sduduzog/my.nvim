@@ -7,10 +7,31 @@ return {
 		opts = {},
 	},
 	{
+		"nvimdev/hlsearch.nvim",
+		event = "BufRead",
+		config = function()
+			require("hlsearch").setup()
+		end,
+	},
+	{
 		"max397574/better-escape.nvim",
 		event = "InsertEnter",
 		config = function()
 			require("better_escape").setup()
+		end,
+	},
+	{
+		"ggandor/leap.nvim",
+		config = function()
+			require("leap").create_default_mappings()
+		end,
+	},
+	{
+		"cbochs/grapple.nvim",
+		dependencies = { "nvim-lua/plenary.nvim" },
+		config = function()
+			vim.keymap.set("n", "<leader>m", require("grapple").toggle)
+			vim.keymap.set("n", "gq", require("grapple").popup_tags)
 		end,
 	},
 	{ "jiangmiao/auto-pairs" },
