@@ -184,6 +184,17 @@ return {
 		end,
 	},
 	{
+		"nvimdev/lspsaga.nvim",
+		dependencies = {
+			"nvim-treesitter/nvim-treesitter",
+			"nvim-tree/nvim-web-devicons",
+		},
+		config = function()
+			require("lspsaga").setup({})
+			vim.keymap.set("n", "<leader>d", "<cmd>Lspsaga diagnostic_jump_next<cr>")
+		end,
+	},
+	{
 		"nvim-lualine/lualine.nvim",
 		opts = {
 			options = {
