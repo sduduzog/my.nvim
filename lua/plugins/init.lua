@@ -143,6 +143,13 @@ return {
 				lsp_zero.buffer_autoformat()
 			end)
 
+			lsp_zero.set_sign_icons({
+				error = "✘",
+				warn = "▲",
+				hint = "⚑",
+				info = "»",
+			})
+
 			require("mason-lspconfig").setup({
 				ensure_installed = { "lua_ls", "volar" },
 				handlers = {
@@ -218,28 +225,31 @@ return {
 			vim.keymap.set("n", "K", "<cmd>Lspsaga hover_doc<cr>")
 		end,
 	},
-	-- {
-	-- 	"nvim-lualine/lualine.nvim",
-	-- 	opts = {
-	-- 		options = {
-	-- 			icons_enabled = true,
-	-- 			theme = "auto",
-	-- 			component_separators = { left = "", right = "" },
-	-- 			section_separators = { left = "", right = "" },
-	-- 			disabled_filetypes = {
-	-- 				packer = {},
-	-- 				NvimTree = {},
-	-- 				statusline = {},
-	-- 				winbar = {},
-	-- 			},
-	-- 			extensions = {
-	-- 				"toggleterm",
-	-- 				"nvim-tree",
-	-- 				"fzf",
-	-- 			},
-	-- 		},
-	-- 	},
-	-- },
+	{
+		"nvim-lualine/lualine.nvim",
+		opts = {
+			options = {
+				icons_enabled = true,
+				theme = "auto",
+				component_separators = { left = "", right = "" },
+				section_separators = { left = "", right = "" },
+				disabled_filetypes = {
+					packer = {},
+					NvimTree = {},
+					statusline = {},
+					winbar = {},
+				},
+				extensions = {
+					"toggleterm",
+					"nvim-tree",
+					"fzf",
+				},
+				sections = {
+					lualine_x = { "overseer" },
+				},
+			},
+		},
+	},
 	{
 		"nvim-tree/nvim-tree.lua",
 		version = "*",
@@ -413,7 +423,6 @@ return {
 			"nvim-lua/plenary.nvim",
 			"antoinemadec/FixCursorHold.nvim",
 			"nvim-treesitter/nvim-treesitter",
-			"stevearc/overseer.nvim",
 			"nvim-neotest/neotest-plenary",
 			"nvim-neotest/neotest-jest",
 			"nvim-neotest/neotest-go",
@@ -429,9 +438,6 @@ return {
 				},
 				discovery = {
 					enabled = false,
-				},
-				consumers = {
-					overseer = require("neotest.consumers.overseer"),
 				},
 				summary = {
 					mappings = {
