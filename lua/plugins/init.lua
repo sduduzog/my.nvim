@@ -27,11 +27,10 @@ return {
 		end,
 	},
 	{
-		"cbochs/grapple.nvim",
-		dependencies = { "nvim-lua/plenary.nvim" },
+		"glepnir/flybuf.nvim",
 		config = function()
-			vim.keymap.set("n", "<leader>m", require("grapple").toggle)
-			vim.keymap.set("n", "gq", require("grapple").popup_tags)
+			require("flybuf").setup({})
+			vim.keymap.set("n", "gq", "<cmd>FlyBuf<cr>")
 		end,
 	},
 	{ "jiangmiao/auto-pairs" },
