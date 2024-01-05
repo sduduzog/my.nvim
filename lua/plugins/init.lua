@@ -447,7 +447,9 @@ return {
 			neotest.setup({
 				adapters = {
 					require("neotest-jest")({
+						jestCommand = require("neotest-jest.jest-util").getJestCommand(vim.fn.expand("%:p:h")) .. " --no-cache",
 						cwd = require("neotest-jest").root,
+						jest_test_discovery = true,
 					}),
 				},
 				discovery = {
@@ -508,7 +510,7 @@ return {
 				neotest.summary.toggle()
 			end)
 			vim.keymap.set("n", "<leader>to", function()
-				neotest.output.open({ short = true })
+				neotest.output.open()
 			end)
 		end,
 	},
