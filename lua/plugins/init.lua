@@ -104,6 +104,12 @@ return {
 		end,
 	},
 	{
+		"sindrets/diffview.nvim",
+		config = function()
+			require("diffview").setup({})
+		end,
+	},
+	{
 		"VonHeikemen/lsp-zero.nvim",
 		branch = "v3.x",
 		dependencies = {
@@ -447,9 +453,9 @@ return {
 			neotest.setup({
 				adapters = {
 					require("neotest-jest")({
-						jestCommand = require("neotest-jest.jest-util").getJestCommand(vim.fn.expand("%:p:h")) .. " --no-cache",
+						jestCommand = "npx jest",
 						cwd = require("neotest-jest").root,
-						jest_test_discovery = true,
+						jest_test_discovery = false,
 					}),
 				},
 				discovery = {
