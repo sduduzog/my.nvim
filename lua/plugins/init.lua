@@ -157,7 +157,7 @@ return {
 			})
 
 			require("mason-lspconfig").setup({
-				ensure_installed = { "lua_ls", "volar" },
+				ensure_installed = { "lua_ls", "volar", "tailwindcss" },
 				handlers = {
 					lsp_zero.default_setup,
 				},
@@ -190,6 +190,8 @@ return {
 					},
 				},
 			})
+
+			require("lspconfig").tailwindcss.setup({})
 
 			local cmp = require("cmp")
 			local cmp_action = require("lsp-zero").cmp_action()
