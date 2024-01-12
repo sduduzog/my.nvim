@@ -219,6 +219,12 @@ return {
 		end,
 	},
 	{
+		"j-hui/fidget.nvim",
+		opts = {
+			-- options
+		},
+	},
+	{
 		"nvimdev/lspsaga.nvim",
 		dependencies = {
 			"nvim-treesitter/nvim-treesitter",
@@ -230,6 +236,7 @@ return {
 			vim.keymap.set("n", "ga", "<cmd>Lspsaga code_action<cr>")
 			vim.keymap.set("n", "gf", "<cmd>Lspsaga finder<cr>")
 			vim.keymap.set("n", "gd", "<cmd>Lspsaga peek_definition<cr>")
+			vim.keymap.set("n", "gr", "<cmd>Lspsaga rename<cr>")
 			vim.keymap.set("n", "K", "<cmd>Lspsaga hover_doc<cr>")
 		end,
 	},
