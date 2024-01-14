@@ -127,9 +127,11 @@ return {
 		config = function()
 			local null_ls = require("null-ls")
 			null_ls.setup({
+				update_on_insert = true,
+				debug = true,
 				sources = {
 					null_ls.builtins.formatting.stylua,
-					null_ls.builtins.formatting.prettierd,
+					null_ls.builtins.formatting.prettier,
 					null_ls.builtins.diagnostics.eslint_d.with({
 						condition = function(utils)
 							return utils.root_has_file({ ".eslintrc", ".eslintrc.cjs" })
@@ -157,7 +159,7 @@ return {
 			})
 
 			require("mason-lspconfig").setup({
-				ensure_installed = { "lua_ls", "volar", "tailwindcss" },
+				ensure_installed = { "lua_ls", "volar", "tailwindcss", "graphql" },
 				handlers = {
 					lsp_zero.default_setup,
 				},
@@ -193,6 +195,8 @@ return {
 
 			require("lspconfig").tailwindcss.setup({})
 
+			require("lspconfig").graphql.setup({})
+
 			local cmp = require("cmp")
 			local cmp_action = require("lsp-zero").cmp_action()
 			local cmp_format = require("lsp-zero").cmp_format()
@@ -217,12 +221,6 @@ return {
 				},
 			})
 		end,
-	},
-	{
-		"j-hui/fidget.nvim",
-		opts = {
-			-- options
-		},
 	},
 	{
 		"nvimdev/lspsaga.nvim",
@@ -452,9 +450,8 @@ return {
 			"nvim-lua/plenary.nvim",
 			"antoinemadec/FixCursorHold.nvim",
 			"nvim-treesitter/nvim-treesitter",
-			"nvim-neotest/neotest-plenary",
 			"nvim-neotest/neotest-jest",
-			"nvim-neotest/neotest-go",
+			"marilari88/neotest-vitest",
 		},
 		config = function()
 			local neotest = require("neotest")
@@ -466,6 +463,7 @@ return {
 						cwd = require("neotest-jest").root,
 						jest_test_discovery = false,
 					}),
+					require("neotest-vitest"),
 				},
 				discovery = {
 					enabled = false,
