@@ -159,7 +159,7 @@ return {
 			})
 
 			require("mason-lspconfig").setup({
-				ensure_installed = { "lua_ls", "volar", "tailwindcss", "graphql" },
+				ensure_installed = { "lua_ls", "volar", "tailwindcss", "graphql", "dockerls" },
 				handlers = {
 					lsp_zero.default_setup,
 				},
@@ -172,6 +172,7 @@ return {
 				end,
 			})
 			require("lspconfig").lua_ls.setup(lua_opts)
+
 			require("lspconfig").volar.setup({
 				on_init = function(client)
 					client.server_capabilities.documentFormattingProvider = false
@@ -196,6 +197,8 @@ return {
 			require("lspconfig").tailwindcss.setup({})
 
 			require("lspconfig").graphql.setup({})
+
+			require("lspconfig").dockerls.setup({})
 
 			local cmp = require("cmp")
 			local cmp_action = require("lsp-zero").cmp_action()
@@ -458,12 +461,12 @@ return {
 			-- require("neotest.logging"):set_level("trace")
 			neotest.setup({
 				adapters = {
+					-- require("neotest-vitest"),
 					require("neotest-jest")({
 						jestCommand = "npx jest",
 						cwd = require("neotest-jest").root,
 						jest_test_discovery = false,
 					}),
-					require("neotest-vitest"),
 				},
 				discovery = {
 					enabled = false,
