@@ -132,13 +132,6 @@ return {
 				sources = {
 					null_ls.builtins.formatting.stylua,
 					null_ls.builtins.formatting.prettier,
-					null_ls.builtins.diagnostics.eslint_d.with({
-						condition = function(utils)
-							return utils.root_has_file({ ".eslintrc", ".eslintrc.cjs" })
-						end,
-					}),
-					null_ls.builtins.code_actions.eslint_d,
-					null_ls.builtins.code_actions.gitsigns,
 				},
 				root_dir = require("null-ls.utils").root_pattern(".null-ls-root", "Makefile", "package.json", ".git"),
 			})
@@ -159,7 +152,7 @@ return {
 			})
 
 			require("mason-lspconfig").setup({
-				ensure_installed = { "lua_ls", "volar", "elixirls", "tailwindcss", "graphql", "dockerls", "emmet_ls" },
+				ensure_installed = { "eslint", "lua_ls", "volar", "elixirls", "tailwindcss", "graphql", "dockerls", "emmet_ls" },
 				handlers = {
 					lsp_zero.default_setup,
 				},
@@ -478,6 +471,7 @@ return {
 	{
 		"nvim-neotest/neotest",
 		dependencies = {
+			"nvim-neotest/nvim-nio",
 			"nvim-lua/plenary.nvim",
 			"antoinemadec/FixCursorHold.nvim",
 			"nvim-treesitter/nvim-treesitter",
