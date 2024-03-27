@@ -159,7 +159,7 @@ return {
 			})
 
 			require("mason-lspconfig").setup({
-				ensure_installed = { "lua_ls", "volar", "tailwindcss", "graphql", "dockerls" },
+				ensure_installed = { "lua_ls", "volar", "elixirls", "tailwindcss", "graphql", "dockerls", "emmet_ls" },
 				handlers = {
 					lsp_zero.default_setup,
 				},
@@ -194,7 +194,34 @@ return {
 				},
 			})
 
-			require("lspconfig").tailwindcss.setup({})
+			local capabilities = vim.lsp.protocol.make_client_capabilities()
+
+			require("lspconfig").tailwindcss.setup({
+				capabilities = capabilities,
+				filetypes = { "html", "elixir", "eelixir", "heex" },
+				init_options = {
+					userLanguages = {
+						elixir = "html-eex",
+						eelixir = "html-eex",
+						heex = "html-eex",
+					},
+				},
+				settings = {
+					tailwindCSS = {
+						experimental = {
+							classRegex = {
+								'class[:]\\s*"([^"]*)"',
+							},
+						},
+					},
+				},
+			})
+
+			require("lspconfig").emmet_ls.setup({
+				capabilities = capabilities,
+				filetypes = { "eelixir", "heex" },
+				-- filetypes = { "html", "css", "elixir", "eelixir", "heex" },
+			})
 
 			require("lspconfig").graphql.setup({})
 
@@ -417,6 +444,7 @@ return {
 					"typescript",
 					"vim",
 					"vue",
+					"heex",
 				},
 				hightlight = {
 					enable = true,
@@ -455,6 +483,7 @@ return {
 			"nvim-treesitter/nvim-treesitter",
 			"nvim-neotest/neotest-jest",
 			"marilari88/neotest-vitest",
+			"jfpedroza/neotest-elixir",
 		},
 		config = function()
 			local neotest = require("neotest")
@@ -467,6 +496,7 @@ return {
 						cwd = require("neotest-jest").root,
 						jest_test_discovery = false,
 					}),
+					require("neotest-elixir"),
 				},
 				discovery = {
 					enabled = false,
