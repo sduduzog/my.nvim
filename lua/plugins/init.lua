@@ -152,7 +152,17 @@ return {
 			})
 
 			require("mason-lspconfig").setup({
-				ensure_installed = { "eslint", "lua_ls", "volar", "elixirls", "tailwindcss", "graphql", "dockerls", "emmet_ls" },
+				ensure_installed = {
+					"eslint",
+					"lua_ls",
+					"tsserver",
+					"volar",
+					"elixirls",
+					"tailwindcss",
+					"graphql",
+					"dockerls",
+					"emmet_ls",
+				},
 				handlers = {
 					lsp_zero.default_setup,
 				},
@@ -166,12 +176,25 @@ return {
 			})
 			require("lspconfig").lua_ls.setup(lua_opts)
 
+			local mason_registry = require("mason-registry")
+			local vue_language_server_path = mason_registry.get_package("vue-language-server"):get_install_path()
+				.. "/node_modules/@vue/language-server"
+
+			require("lspconfig").tsserver.setup({
+				init_options = {
+					plugins = {
+						{ name = "@vue/typescript-plugin", location = vue_language_server_path, languates = { "vue" } },
+					},
+				},
+
+				filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
+			})
+
 			require("lspconfig").volar.setup({
 				on_init = function(client)
 					client.server_capabilities.documentFormattingProvider = false
 					client.server_capabilities.documentFormattingRangeProvider = false
 				end,
-				filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue", "json" },
 				settings = {
 					css = {
 						lint = {
@@ -212,7 +235,7 @@ return {
 
 			require("lspconfig").emmet_ls.setup({
 				capabilities = capabilities,
-				filetypes = { "eelixir", "heex" },
+				filetypes = { "html", "css", "eelixir", "heex" },
 				-- filetypes = { "html", "css", "elixir", "eelixir", "heex" },
 			})
 
@@ -422,12 +445,18 @@ return {
 					"bash",
 					"css",
 					"diff",
+					"eex",
 					"elixir",
+					"gitcommit",
 					"go",
 					"graphql",
+					"hcl",
+					"heex",
 					"html",
 					"javascript",
+					"jsdoc",
 					"json",
+					"kotlin",
 					"lua",
 					"make",
 					"markdown",
@@ -437,7 +466,6 @@ return {
 					"typescript",
 					"vim",
 					"vue",
-					"heex",
 				},
 				hightlight = {
 					enable = true,
