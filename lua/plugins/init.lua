@@ -236,7 +236,6 @@ return {
 			require("lspconfig").emmet_ls.setup({
 				capabilities = capabilities,
 				filetypes = { "html", "css", "eelixir", "heex" },
-				-- filetypes = { "html", "css", "elixir", "eelixir", "heex" },
 			})
 
 			require("lspconfig").graphql.setup({})
@@ -256,8 +255,8 @@ return {
 				},
 				mapping = cmp.mapping.preset.insert({
 					["<CR>"] = cmp.mapping.confirm({ select = false }),
-					["<Tab>"] = cmp_action.luasnip_supertab(),
-					["<S-Tab>"] = cmp_action.luasnip_shift_supertab(),
+					["<Tab>"] = cmp_action.tab_complete(),
+					["<S-Tab>"] = cmp_action.select_prev_or_fallback(),
 				}),
 				formatting = cmp_format,
 				snippet = {
