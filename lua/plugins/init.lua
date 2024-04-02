@@ -181,6 +181,10 @@ return {
 				.. "/node_modules/@vue/language-server"
 
 			require("lspconfig").tsserver.setup({
+				on_init = function(client)
+					client.server_capabilities.documentFormattingProvider = false
+					client.server_capabilities.documentFormattingRangeProvider = false
+				end,
 				init_options = {
 					plugins = {
 						{ name = "@vue/typescript-plugin", location = vue_language_server_path, languates = { "vue" } },
