@@ -246,6 +246,8 @@ return {
 
 			require("lspconfig").dockerls.setup({})
 
+			require("lspconfig").eslint.setup({})
+
 			local cmp = require("cmp")
 			local cmp_action = require("lsp-zero").cmp_action()
 			local cmp_format = require("lsp-zero").cmp_format()
