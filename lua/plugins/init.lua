@@ -132,6 +132,7 @@ return {
 				sources = {
 					null_ls.builtins.formatting.stylua,
 					null_ls.builtins.formatting.prettier,
+					null_ls.builtins.diagnostics.credo,
 				},
 				root_dir = require("null-ls.utils").root_pattern(".null-ls-root", "Makefile", "package.json", ".git"),
 			})
