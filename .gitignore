@@ -1,6 +1,3 @@
 undo
-lua/plugins/*
 !lua/plugins/init.lua
-lua/options
-lua/options.lua
 
