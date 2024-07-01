@@ -73,7 +73,6 @@ wk.register {
 			"Show test summary",
 		},
 	},
-	[":"] = { "<cmd>Telescope cmdline<cr>", "Cmdline" },
 	g = {
 		name = "+Goto",
 		b = { builtin.git_branches, "Brances" },

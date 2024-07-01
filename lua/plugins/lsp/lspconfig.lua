@@ -34,10 +34,6 @@ return {
 					},
 				}, { buffer = bufnr })
 
-				vim.keymap.set("n", "<space>fp", ":ElixirFromPipe<cr>", { buffer = true, noremap = true })
-				vim.keymap.set("n", "<space>tp", ":ElixirToPipe<cr>", { buffer = true, noremap = true })
-				vim.keymap.set("v", "<space>em", ":ElixirExpandMacro<cr>", { buffer = true, noremap = true })
-
 				require("lsp_signature").on_attach({
 					bind = true,
 				}, bufnr)
@@ -48,24 +44,13 @@ return {
 			-- lsp.elixirls.setup {
 			-- 	cmd = { "elixir-ls" },
 			-- 	on_attach = on_attach,
+			-- 	capabilities = lsp_capabilities,
 			-- }
-			lsp.lexical.setup {
-				on_attach = on_attach,
-				filetypes = { "elixir", "eelixir", "heex", "surface" },
-				cmd = {
-					---@diagnostic disable-next-line: undefined-field
-					vim.loop.os_homedir() .. "/.local/share/nvim/mason/packages/lexical/libexec/lexical/bin/start_lexical.sh",
-				},
-				root_dir = function(fname)
-					---@diagnostic disable-next-line: undefined-field
-					return lsp.util.root_pattern("mix.exs", ".git")(fname) or vim.loop.os_homedir()
-				end,
-			}
 
 			lsp.emmet_language_server.setup {
 				on_attach = on_attach,
 				capabilities = lsp_capabilities,
-				filetypes = { "heex" },
+				filetypes = { "elixir", "eelixir", "heex" },
 			}
 
 			lsp.eslint.setup {

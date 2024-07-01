@@ -11,7 +11,7 @@ return {
 				ensure_installed = {
 					"emmet-language-server",
 					"eslint",
-					"lexical",
+					-- "elixirls",
 					"lua_ls",
 					"stylua",
 					"tailwindcss",

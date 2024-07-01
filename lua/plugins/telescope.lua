@@ -4,9 +4,6 @@ return {
 	dependencies = {
 		"nvim-lua/plenary.nvim",
 		"nvim-telescope/telescope-file-browser.nvim",
-		"gbrlsnchs/telescope-lsp-handlers.nvim",
-		"nvim-telescope/telescope-ui-select.nvim",
-		"jonarrien/telescope-cmdline.nvim",
 		"nvim-telescope/telescope-media-files.nvim",
 		{
 			"nvim-telescope/telescope-fzf-native.nvim",
@@ -21,9 +18,6 @@ return {
 		local fb_actions = telescope.extensions.file_browser.actions
 		telescope.setup {
 			extensions = {
-				["ui-select"] = {
-					require("telescope.themes").get_dropdown {},
-				},
 				file_browser = {
 					mappings = {
 						["i"] = {
@@ -35,8 +29,6 @@ return {
 			},
 		}
 		telescope.load_extension("file_browser")
-		telescope.load_extension("lsp_handlers")
-		telescope.load_extension("ui-select")
 		telescope.load_extension("media_files")
 	end,
 }
