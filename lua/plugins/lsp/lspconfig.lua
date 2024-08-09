@@ -41,11 +41,11 @@ return {
 
 			local lsp_capabilities = require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
 
-			-- lsp.elixirls.setup {
-			-- 	cmd = { "elixir-ls" },
-			-- 	on_attach = on_attach,
-			-- 	capabilities = lsp_capabilities,
-			-- }
+			lsp.elixirls.setup {
+				cmd = { "elixir-ls" },
+				on_attach = on_attach,
+				capabilities = lsp_capabilities,
+			}
 
 			lsp.emmet_language_server.setup {
 				on_attach = on_attach,
@@ -94,7 +94,7 @@ return {
 
 			lsp.tailwindcss.setup {
 				capabilities = lsp_capabilities,
-				filetypes = { "html", "elixir", "eelixir", "heex" },
+				filetypes = { "html", "elixir", "eelixir", "heex", "vue" },
 				init_options = {
 					userLanguages = {
 						elixir = "html-eex",
@@ -123,12 +123,25 @@ return {
 				},
 			}
 
-			lsp.tsserver.setup {
+			--    lsp.tsserver.setup {
+			-- 	on_init = function(client)
+			-- 		client.server_capabilities.documentFormattingProvider = false
+			-- 		client.server_capabilities.documentFormattingRangeProvider = false
+			-- 	end,
+			-- 	filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
+			-- }
+
+			lsp.volar.setup {
 				on_init = function(client)
 					client.server_capabilities.documentFormattingProvider = false
 					client.server_capabilities.documentFormattingRangeProvider = false
 				end,
 				filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
+				init_options = {
+					vue = {
+						hybridMode = false,
+					},
+				},
 			}
 
 			local null_ls = require("null-ls")
@@ -140,6 +153,7 @@ return {
 				sources = {
 					null_ls.builtins.formatting.stylua,
 					null_ls.builtins.formatting.prettier,
+					null_ls.builtins.diagnostics.credo,
 					null_ls.builtins.code_actions.gitsigns.with {
 						config = {
 							filter_actions = function(title)
