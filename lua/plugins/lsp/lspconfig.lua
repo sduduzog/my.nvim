@@ -1,4 +1,4 @@
-return {
+local chicken = {
 	{
 		"neovim/nvim-lspconfig",
 		dependencies = {
@@ -23,16 +23,6 @@ return {
 						end,
 					})
 				end
-
-				local wk = require("which-key")
-
-				wk.register({
-					K = { "<cmd>lua vim.lsp.buf.hover()<cr>", "Hover" },
-					["<leader>"] = {
-						a = { "<cmd>lua vim.lsp.buf.code_action()<cr>", "Code actions" },
-						r = { "<cmd>lua vim.lsp.buf.rename()<cr>", "Rename" },
-					},
-				}, { buffer = bufnr })
 
 				require("lsp_signature").on_attach({
 					bind = true,
@@ -113,36 +103,28 @@ return {
 				},
 			}
 
-			lsp.tailwindcss.setup {
+			local mason_registry = require("mason-registry")
+			local vue_language_server_path = mason_registry.get_package("vue-language-server"):get_install_path()
+				.. "/node_modules/@vue/language-server"
+
+			lsp.ts_ls.setup {
 				init_options = {
-					userLanguages = {
-						elixir = "html-eex",
-						eelixir = "html-eex",
-						heex = "html-eex",
+					plugins = {
+						{
+							name = "@vue/typescript-plugin",
+							location = vue_language_server_path,
+							languages = { "vue" },
+						},
 					},
 				},
-			}
-
-			--    lsp.tsserver.setup {
-			-- 	on_init = function(client)
-			-- 		client.server_capabilities.documentFormattingProvider = false
-			-- 		client.server_capabilities.documentFormattingRangeProvider = false
-			-- 	end,
-			-- 	filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
-			-- }
-
-			lsp.volar.setup {
 				on_init = function(client)
 					client.server_capabilities.documentFormattingProvider = false
 					client.server_capabilities.documentFormattingRangeProvider = false
 				end,
 				filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
-				init_options = {
-					vue = {
-						hybridMode = false,
-					},
-				},
 			}
+
+			lsp.volar.setup {}
 
 			local null_ls = require("null-ls")
 
@@ -153,7 +135,11 @@ return {
 				sources = {
 					null_ls.builtins.formatting.stylua,
 					null_ls.builtins.formatting.prettier,
-					null_ls.builtins.diagnostics.credo,
+					null_ls.builtins.diagnostics.credo.with {
+						condition = function(utils)
+							return utils.root_has_file { ".credo.ex", ".credo.exs" }
+						end,
+					},
 					null_ls.builtins.code_actions.gitsigns.with {
 						config = {
 							filter_actions = function(title)
@@ -168,3 +154,4 @@ return {
 		end,
 	},
 }
+return {}

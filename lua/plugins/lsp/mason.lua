@@ -16,7 +16,8 @@ return {
 					"lua_ls",
 					"stylua",
 					"tailwindcss",
-					"tsserver",
+          "typescript-language-server",
+          "vue-language-server"
 				},
 			}
 		end,

@@ -1,4 +1,4 @@
-return {
+local chicken = {
 	{
 		"hrsh7th/nvim-cmp",
 		dependencies = {
@@ -113,3 +113,5 @@ return {
 		end,
 	},
 }
+
+return {}
