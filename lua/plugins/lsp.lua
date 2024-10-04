@@ -5,6 +5,8 @@ return {
 		"hrsh7th/cmp-nvim-lsp",
 		"nvim-lua/plenary.nvim",
 		"L3MON4D3/LuaSnip",
+		"luckasRanarison/tailwind-tools.nvim",
+		"onsails/lspkind-nvim",
 		-- "VidocqH/lsp-lens.nvim",
 		-- "ray-x/lsp_signature.nvim",
 		-- 		"hrsh7th/cmp-buffer",
@@ -22,6 +24,7 @@ return {
 	},
 	event = { "BufReadPre", "BufNewFile" },
 	config = function()
+		---@diagnostic disable-next-line: unused-local
 		local lsp_attach = function(client, bufnr)
 			vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
 				buffer = bufnr,
@@ -29,6 +32,15 @@ return {
 					require("nvim-lightbulb").update_lightbulb()
 				end,
 			})
+
+			if client.name == "tailwindcss" then
+				vim.api.nvim_create_autocmd("BufWritePost", {
+					buffer = bufnr,
+					callback = function()
+						vim.cmd("TailwindSort")
+					end,
+				})
+			end
 
 			local wk = require("which-key")
 
@@ -43,11 +55,29 @@ return {
 
 		local lsp_options = {
 			capabilities = capabilities,
-			on_attach = on_attach,
+			on_attach = lsp_attach,
 			single_file_support = true,
 		}
 
 		local lsp = require("lspconfig")
+
+		lsp.lua_ls.setup(vim.tbl_extend("force", lsp_options, {
+			settings = {
+				Lua = {
+					runtime = {
+						version = "LuaJIT",
+					},
+					diagnostics = {
+						globals = { "vim" },
+					},
+					workspace = {
+						library = {
+							vim.env.VIMRUNTIME,
+						},
+					},
+				},
+			},
+		}))
 
 		local mason_registry = require("mason-registry")
 		local vue_language_server_path = mason_registry.get_package("vue-language-server"):get_install_path()
@@ -63,10 +93,6 @@ return {
 					},
 				},
 			},
-			on_init = function(client)
-				client.server_capabilities.documentFormattingProvider = false
-				client.server_capabilities.documentFormattingRangeProvider = false
-			end,
 			filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
 		}))
 
@@ -97,10 +123,24 @@ return {
 
 		lsp.volar.setup(lsp_options)
 
+		lsp.emmet_language_server.setup(vim.tbl_extend("force", lsp_options, {
+			init_options = {
+				includeLanguages = {
+					elixir = "html-eex",
+					eelixir = "html-eex",
+					heex = "html-eex",
+				},
+			},
+		}))
+
 		local cmp = require("cmp")
 		local luasnip = require("luasnip")
 
 		cmp.setup {
+			preselect = "item",
+			completion = {
+				completeopt = "menu,menuone,noinsert",
+			},
 			snippet = {
 				expand = function(args)
 					luasnip.lsp_expand(args.body)
@@ -136,6 +176,12 @@ return {
 			sources = {
 				{ name = "nvim_lsp" },
 				{ name = "luasnip" },
+			},
+			formatting = {
+				format = require("lspkind").cmp_format {
+					mode = "symbol",
+					before = require("tailwind-tools.cmp").lspkind_format,
+				},
 			},
 		}
 	end,
