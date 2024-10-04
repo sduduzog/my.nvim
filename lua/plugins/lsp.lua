@@ -1,15 +1,12 @@
 return {
 	"neovim/nvim-lspconfig",
 	dependencies = {
-		"williamboman/mason.nvim",
-		"WhoIsSethDaniel/mason-tool-installer.nvim",
-		"williamboman/mason-lspconfig.nvim",
 		"hrsh7th/nvim-cmp",
 		"hrsh7th/cmp-nvim-lsp",
 		"nvim-lua/plenary.nvim",
+		"L3MON4D3/LuaSnip",
 		-- "VidocqH/lsp-lens.nvim",
 		-- "ray-x/lsp_signature.nvim",
-		-- 		"L3MON4D3/LuaSnip",
 		-- 		"hrsh7th/cmp-buffer",
 		-- 		"hrsh7th/cmp-cmdline",
 		-- 		"hrsh7th/cmp-path",
@@ -25,21 +22,6 @@ return {
 	},
 	event = { "BufReadPre", "BufNewFile" },
 	config = function()
-		require("mason").setup {}
-		require("mason-tool-installer").setup {
-			ensure_installed = {
-				-- "biome",
-				-- "emmet-language-server",
-				-- "elixirls",
-				-- "eslint",
-				-- "lua_ls",
-				"volar",
-				-- "stylua",
-				"tailwindcss",
-				"typescript-language-server",
-			},
-		}
-
 		local lsp_attach = function(client, bufnr)
 			vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
 				buffer = bufnr,
@@ -55,11 +37,15 @@ return {
 			}
 		end
 
-		local capabilities = vim.tbl_deep_extend(
-			"force",
-			vim.lsp.protocol.make_client_capabilities(),
-			require("cmp_nvim_lsp").default_capabilities()
-		)
+		local capabilities = vim.lsp.protocol.make_client_capabilities()
+
+		capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
+
+		local lsp_options = {
+			capabilities = capabilities,
+			on_attach = on_attach,
+			single_file_support = true,
+		}
 
 		local lsp = require("lspconfig")
 
@@ -67,7 +53,7 @@ return {
 		local vue_language_server_path = mason_registry.get_package("vue-language-server"):get_install_path()
 			.. "/node_modules/@vue/language-server"
 
-		lsp.ts_ls.setup {
+		lsp.ts_ls.setup(vim.tbl_extend("force", lsp_options, {
 			init_options = {
 				plugins = {
 					{
@@ -81,33 +67,75 @@ return {
 				client.server_capabilities.documentFormattingProvider = false
 				client.server_capabilities.documentFormattingRangeProvider = false
 			end,
-			-- filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
-		}
+			filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
+		}))
 
-		lsp.biome.setup {}
+		lsp.tailwindcss.setup(vim.tbl_extend("force", lsp_options, {
+			settings = {
+				tailwindCSS = {
+					includeLanguages = {
+						elixir = "html-eex",
+						eelixir = "html-eex",
+						heex = "html-eex",
+					},
+					emmetCompletions = true,
+					experimental = {
+						classRegex = {
+							'class[:]\\s*"([^"]*)"',
+						},
+					},
+				},
+			},
+		}))
 
-		lsp.volar.setup {}
+		lsp.elixirls.setup(vim.tbl_extend("force", lsp_options, {
+			cmd = { "elixir-ls" },
+			settings = { elixirLS = { dialyzerEnabled = false } },
+		}))
 
-		lsp.tailwindcss.setup {
-			on_attach = on_attach,
-			capabilities = capabilities,
-		}
+		lsp.biome.setup(lsp_options)
 
-		lsp.tailwindcss.setup {
-			on_attach = on_attach,
-			capabilities = capabilities,
-		}
+		lsp.volar.setup(lsp_options)
 
 		local cmp = require("cmp")
+		local luasnip = require("luasnip")
 
 		cmp.setup {
 			snippet = {
 				expand = function(args)
-					vim.snippet.expand(args.body)
+					luasnip.lsp_expand(args.body)
 				end,
+			},
+			mapping = cmp.mapping.preset.insert {
+				["<C-d>"] = cmp.mapping.scroll_docs(-4),
+				["<C-f>"] = cmp.mapping.scroll_docs(4),
+				["<C-Space>"] = cmp.mapping.complete {},
+				["<CR>"] = cmp.mapping.confirm {
+					behavior = cmp.ConfirmBehavior.Replace,
+					select = true,
+				},
+				["<Tab>"] = cmp.mapping(function(fallback)
+					if cmp.visible() then
+						cmp.select_next_item()
+					elseif luasnip.expand_or_jumpable() then
+						luasnip.expand_or_jump()
+					else
+						fallback()
+					end
+				end, { "i", "s" }),
+				["<S-Tab>"] = cmp.mapping(function(fallback)
+					if cmp.visible() then
+						cmp.select_prev_item()
+					elseif luasnip.jumpable(-1) then
+						luasnip.jump(-1)
+					else
+						fallback()
+					end
+				end, { "i", "s" }),
 			},
 			sources = {
 				{ name = "nvim_lsp" },
+				{ name = "luasnip" },
 			},
 		}
 	end,
