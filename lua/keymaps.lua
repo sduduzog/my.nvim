@@ -86,16 +86,10 @@ end
 -- }
 --
 wk.add {
-
 	{ "<leader>]", ":bn<cr>" },
 	{ "<leader>[", ":bp<cr>" },
-	{ "K", "<cmd>lua vim.lsp.buf.hover()<cr>" },
 	{ "<leader>e", "<cmd>NvimTreeFindFileToggle<cr>", mode = "n" },
 	{ "<leader>lg", "<cmd>LazyGit<cr>", mode = "n" },
-	{ "<leader>dd", "<cmd>lua vim.diagnostic.open_float()<cr>", mode = "n" },
-	{ "<leader>dl", builtin.diagnostics, mode = "n" },
-	{ "<leader>a", "<cmd>lua vim.lsp.buf.code_action()<cr>" },
-	{ "<leader>r", "<cmd>lua vim.lsp.buf.rename()<cr>" },
 	{ "<leader>bd", ":bd<cr>" },
 	{ "<leader>fs", builtin.current_buffer_fuzzy_find, name = "Find in current buffer" },
 	{ "<leader>ff", builtin.find_files, name = "Find files" },

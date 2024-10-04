@@ -9,15 +9,16 @@ return {
 			require("mason").setup {}
 			require("mason-tool-installer").setup {
 				ensure_installed = {
+					"biome",
 					"emmet-language-server",
-					"eslint",
 					"elixirls",
-					"volar",
+					"eslint",
 					"lua_ls",
+					"volar",
 					"stylua",
 					"tailwindcss",
-          "typescript-language-server",
-          "vue-language-server"
+					"typescript-language-server",
+					"vue-language-server",
 				},
 			}
 		end,

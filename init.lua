@@ -83,4 +83,5 @@ vim.diagnostic.config {
 	update_in_insert = false,
 	underline = true,
 	severity_sort = true,
+	virtual_text = false,
 }

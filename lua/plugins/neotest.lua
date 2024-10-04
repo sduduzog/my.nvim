@@ -59,5 +59,13 @@ return {
 				enabled = true,
 			},
 		}
+
+		-- local wk = require("which-key")
+		--
+		-- wk.add {
+		-- 	{ "<leader>tt", testNearest },
+		-- 	{ "<leader>tf", testFile },
+		-- 	{ "<leader>to", testOutput },
+		-- }
 	end,
 }
