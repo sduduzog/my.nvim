@@ -3,6 +3,7 @@ return {
 	dependencies = {
 		"hrsh7th/nvim-cmp",
 		"hrsh7th/cmp-nvim-lsp",
+		"hrsh7th/cmp-buffer",
 		"nvim-lua/plenary.nvim",
 		"L3MON4D3/LuaSnip",
 		"luckasRanarison/tailwind-tools.nvim",
@@ -105,7 +106,9 @@ return {
 			settings = { elixirLS = { dialyzerEnabled = false } },
 		}))
 
-		lsp.biome.setup(lsp_options)
+		lsp.biome.setup(vim.tbl_extend("force", lsp_options, {
+			filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
+		}))
 
 		lsp.volar.setup(lsp_options)
 
@@ -177,6 +180,7 @@ return {
 			sources = {
 				{ name = "nvim_lsp" },
 				{ name = "luasnip" },
+				{ name = "buffer" },
 			},
 			formatting = {
 				format = require("lspkind").cmp_format {
