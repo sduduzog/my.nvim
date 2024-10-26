@@ -8,10 +8,11 @@ return {
 		require("mason").setup {}
 		require("mason-tool-installer").setup {
 			ensure_installed = {
+				"bashls",
+				"beautysh",
 				"biome",
 				"emmet-language-server",
 				"elixirls",
-				-- "eslint",
 				"lua_ls",
 				"volar",
 				"stylua",
