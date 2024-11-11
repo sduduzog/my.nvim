@@ -86,11 +86,6 @@ return {
 		lsp.tailwindcss.setup(vim.tbl_extend("force", lsp_options, {
 			settings = {
 				tailwindCSS = {
-					includeLanguages = {
-						elixir = "html-eex",
-						eelixir = "html-eex",
-						heex = "html-eex",
-					},
 					emmetCompletions = true,
 					experimental = {
 						classRegex = {
@@ -101,9 +96,20 @@ return {
 			},
 		}))
 
-		lsp.elixirls.setup(vim.tbl_extend("force", lsp_options, {
-			cmd = { "elixir-ls" },
-			settings = { elixirLS = { dialyzerEnabled = false } },
+		-- lsp.elixirls.setup(vim.tbl_extend("force", lsp_options, {
+		-- 	cmd = { "elixir-ls" },
+		-- 	settings = { elixirLS = { dialyzerEnabled = false } },
+		-- }))
+		lsp.nextls.setup(vim.tbl_extend("force", lsp_options, {
+			cmd = { "nextls", "--stdio" },
+			init_options = {
+				extensions = {
+					creado = { enalbe = true },
+				},
+				experimental = {
+					completions = { enable = true },
+				},
+			},
 		}))
 
 		lsp.biome.setup(vim.tbl_extend("force", lsp_options, {
