@@ -96,20 +96,9 @@ return {
 			},
 		}))
 
-		-- lsp.elixirls.setup(vim.tbl_extend("force", lsp_options, {
-		-- 	cmd = { "elixir-ls" },
-		-- 	settings = { elixirLS = { dialyzerEnabled = false } },
-		-- }))
-		lsp.nextls.setup(vim.tbl_extend("force", lsp_options, {
-			cmd = { "nextls", "--stdio" },
-			init_options = {
-				extensions = {
-					creado = { enalbe = true },
-				},
-				experimental = {
-					completions = { enable = true },
-				},
-			},
+		lsp.elixirls.setup(vim.tbl_extend("force", lsp_options, {
+			cmd = { "elixir-ls" },
+			settings = { elixirLS = { dialyzerEnabled = false } },
 		}))
 
 		lsp.biome.setup(vim.tbl_extend("force", lsp_options, {
