@@ -85,3 +85,5 @@ vim.diagnostic.config {
 	severity_sort = true,
 	virtual_text = false,
 }
+
+vim.lsp.set_log_level("error")

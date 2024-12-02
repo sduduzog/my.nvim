@@ -98,7 +98,7 @@ return {
 
 		lsp.elixirls.setup(vim.tbl_extend("force", lsp_options, {
 			cmd = { "elixir-ls" },
-			settings = { elixirLS = { dialyzerEnabled = false } },
+			settings = { elixirLS = { dialyzerEnabled = true, incrementalDialyzer = true } },
 		}))
 
 		lsp.biome.setup(vim.tbl_extend("force", lsp_options, {
