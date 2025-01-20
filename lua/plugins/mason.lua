@@ -18,6 +18,7 @@ return {
 				"stylua",
 				"tailwindcss",
 				"typescript-language-server",
+				"zls",
 			},
 		}
 	end,

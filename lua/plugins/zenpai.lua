@@ -1,5 +1,5 @@
 return {
-	"vutlhari/zenpai.nvim",
+	dir = "~/code/zenpai.nvim",
 	dependencies = {
 		"MunifTanjim/nui.nvim",
 		"nvim-lua/plenary.nvim",

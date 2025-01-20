@@ -134,6 +134,8 @@ return {
 
 		lsp.bashls.setup(lsp_options)
 
+		lsp.zls.setup(lsp_options)
+
 		local cmp = require("cmp")
 		local luasnip = require("luasnip")
 
