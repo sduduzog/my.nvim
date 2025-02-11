@@ -136,6 +136,8 @@ return {
 
 		lsp.zls.setup(lsp_options)
 
+		lsp.gopls.setup(lsp_options)
+
 		local cmp = require("cmp")
 		local luasnip = require("luasnip")
 

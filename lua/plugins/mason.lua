@@ -13,6 +13,7 @@ return {
 				"biome",
 				"elixirls",
 				"emmet-language-server",
+				"gopls",
 				"lua_ls",
 				"volar",
 				"stylua",
