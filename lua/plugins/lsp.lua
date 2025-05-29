@@ -83,60 +83,63 @@ return {
 			filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
 		}))
 
-		lsp.tailwindcss.setup(vim.tbl_extend("force", lsp_options, {
-			settings = {
-				tailwindCSS = {
-					emmetCompletions = true,
-					experimental = {
-						classRegex = {
-							'class[:]\\s*"([^"]*)"',
-						},
-					},
-				},
-			},
-		}))
+		-- lsp.tailwindcss.setup(vim.tbl_extend("force", lsp_options, {
+		-- 	settings = {
+		-- 		tailwindCSS = {
+		-- 			emmetCompletions = true,
+		-- 			experimental = {
+		-- 				classRegex = {
+		-- 					'class[:]\\s*"([^"]*)"',
+		-- 				},
+		-- 			},
+		-- 		},
+		-- 	},
+		-- }))
+		--
 
-		lsp.elixirls.setup(vim.tbl_extend("force", lsp_options, {
-			cmd = { "elixir-ls" },
-			settings = { elixirLS = { dialyzerEnabled = false } },
-		}))
-
-		lsp.biome.setup(vim.tbl_extend("force", lsp_options, {
-			filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
-		}))
+		lsp.eslint.setup(lsp_options)
 
 		lsp.volar.setup(lsp_options)
 
-		lsp.emmet_language_server.setup(vim.tbl_extend("force", lsp_options, {
-			init_options = {
-				includeLanguages = {
-					elixir = "html-eex",
-					eelixir = "html-eex",
-					heex = "html-eex",
-					eex = "html-eex",
-				},
-			},
-			filetypes = {
-				"css",
-				"eelixir",
-				"elixir",
-				"heex",
-				"html",
-				"javascript",
-				"javascriptreact",
-				"less",
-				"sass",
-				"scss",
-				"pug",
-				"typescriptreact",
-			},
-		}))
+		-- lsp.emmet_language_server.setup(vim.tbl_extend("force", lsp_options, {
+		-- 	init_options = {
+		-- 		includeLanguages = {
+		-- 			elixir = "html-eex",
+		-- 			eelixir = "html-eex",
+		-- 			heex = "html-eex",
+		-- 			eex = "html-eex",
+		-- 		},
+		-- 	},
+		-- 	filetypes = {
+		-- 		"css",
+		-- 		"eelixir",
+		-- 		"elixir",
+		-- 		"heex",
+		-- 		"html",
+		-- 		"javascript",
+		-- 		"javascriptreact",
+		-- 		"less",
+		-- 		"sass",
+		-- 		"scss",
+		-- 		"pug",
+		-- 		"typescriptreact",
+		-- 	},
+		-- }))
+
+		lsp.astro.setup(lsp_options)
 
 		lsp.bashls.setup(lsp_options)
 
 		lsp.zls.setup(lsp_options)
 
-		lsp.gopls.setup(lsp_options)
+		lsp.gopls.setup(vim.tbl_extend("force", lsp_options, {
+			settings = {
+				gopls = {
+					staticcheck = true,
+					gofumpt = true,
+				},
+			},
+		}))
 
 		local cmp = require("cmp")
 		local luasnip = require("luasnip")
@@ -185,7 +188,7 @@ return {
 			},
 			formatting = {
 				format = require("lspkind").cmp_format {
-					mode = "symbol",
+					-- mode = "symbol",
 					before = require("tailwind-tools.cmp").lspkind_format,
 				},
 			},

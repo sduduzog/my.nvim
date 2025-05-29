@@ -8,13 +8,14 @@ return {
 		require("mason").setup {}
 		require("mason-tool-installer").setup {
 			ensure_installed = {
+				"astro-language-server",
 				"bashls",
 				"beautysh",
-				"biome",
-				"elixirls",
-				"emmet-language-server",
+				"emmet-ls",
+				"eslint-lsp",
 				"gopls",
 				"lua_ls",
+				"prettierd",
 				"volar",
 				"stylua",
 				"tailwindcss",
