@@ -6,8 +6,8 @@ return {
 		"hrsh7th/cmp-buffer",
 		"nvim-lua/plenary.nvim",
 		"L3MON4D3/LuaSnip",
-		"luckasRanarison/tailwind-tools.nvim",
 		"onsails/lspkind-nvim",
+		"roobert/tailwindcss-colorizer-cmp.nvim",
 	},
 	event = { "BufReadPre", "BufNewFile" },
 	config = function()
@@ -19,15 +19,6 @@ return {
 					require("nvim-lightbulb").update_lightbulb()
 				end,
 			})
-
-			if client.name == "tailwindcss" then
-				vim.api.nvim_create_autocmd("BufWritePost", {
-					buffer = bufnr,
-					callback = function()
-						vim.cmd("TailwindSort")
-					end,
-				})
-			end
 
 			local wk = require("which-key")
 
@@ -67,23 +58,70 @@ return {
 		}))
 
 		local mason_registry = require("mason-registry")
-		local vue_language_server_path = mason_registry.get_package("vue-language-server"):get_install_path()
-			.. "/node_modules/@vue/language-server"
+		-- local vue_language_server_path = mason_registry.get_package('vue-language-server'):get_install_path()
+		--     .. '/node_modules/@vue/language-server'
 
 		lsp.ts_ls.setup(vim.tbl_extend("force", lsp_options, {
 			init_options = {
-				plugins = {
-					{
-						name = "@vue/typescript-plugin",
-						location = vue_language_server_path,
-						languages = { "vue" },
-					},
-				},
+				-- plugins = {
+				--   {
+				--     name = '@vue/typescript-plugin',
+				--     location = vue_language_server_path,
+				--     languages = { 'vue' },
+				--   },
+				-- },
 			},
 			filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
 		}))
 
+		lsp.eslint.setup(lsp_options)
+
+		lsp.tailwindcss.setup(vim.tbl_extend("force", lsp_options, {
+			filetypes = {
+				"html",
+				"css",
+				"scss",
+				"javascript",
+				"javascriptreact",
+				"typescript",
+				"typescriptreact",
+				"vue",
+				"svelte",
+				"heex",
+				"eelixir",
+				"elixir",
+			},
+			init_options = {
+				userLanguages = {
+					heex = "html",
+					eelixir = "html",
+					["html.heex"] = "html",
+				},
+			},
+			settings = {
+				tailwindCSS = {
+					experimental = {
+						emmetCompletions = true,
+						classRegex = {
+							'class[:]\\s*"([^"]*)"',
+							'class: "([^"]*)"',
+						},
+						includeLanguages = {
+							heex = "html-eex",
+							elixir = "html-eex",
+						},
+					},
+				},
+			},
+		}))
+
 		-- lsp.tailwindcss.setup(vim.tbl_extend("force", lsp_options, {
+		-- 	init_options = {
+		-- 		userLanguages = {
+		-- 			heex = "html-eex",
+		-- 			elixir = "html-eex",
+		-- 		},
+		-- 	},
 		-- 	settings = {
 		-- 		tailwindCSS = {
 		-- 			emmetCompletions = true,
@@ -92,45 +130,43 @@ return {
 		-- 					'class[:]\\s*"([^"]*)"',
 		-- 				},
 		-- 			},
+		-- 			includeLanguages = {
+		-- 				heex = "html-eex",
+		-- 				elixir = "html-eex",
+		-- 			},
 		-- 		},
 		-- 	},
 		-- }))
-		--
 
-		lsp.eslint.setup(lsp_options)
-
-		lsp.volar.setup(lsp_options)
-
-		-- lsp.emmet_language_server.setup(vim.tbl_extend("force", lsp_options, {
-		-- 	init_options = {
+		-- lsp.emmet_ls.setup(vim.tbl_extend("force", lsp_options, {
+		-- filetypes = {
+		-- 	"css",
+		-- 	"eruby",
+		-- 	"html",
+		-- 	"javascript",
+		-- 	"javascriptreact",
+		-- 	"less",
+		-- 	"sass",
+		-- 	"scss",
+		-- 	"svelte",
+		-- 	"pug",
+		-- 	"typescriptreact",
+		-- 	"vue",
+		-- 	"heex",
+		-- 	"elixir",
+		-- },
+		-- settings = {
+		-- 	emmet = {
 		-- 		includeLanguages = {
-		-- 			elixir = "html-eex",
-		-- 			eelixir = "html-eex",
-		-- 			heex = "html-eex",
-		-- 			eex = "html-eex",
+		-- 			["phoenix-heex"] = "html",
 		-- 		},
 		-- 	},
-		-- 	filetypes = {
-		-- 		"css",
-		-- 		"eelixir",
-		-- 		"elixir",
-		-- 		"heex",
-		-- 		"html",
-		-- 		"javascript",
-		-- 		"javascriptreact",
-		-- 		"less",
-		-- 		"sass",
-		-- 		"scss",
-		-- 		"pug",
-		-- 		"typescriptreact",
-		-- 	},
+		-- },
 		-- }))
 
 		lsp.astro.setup(lsp_options)
 
 		lsp.bashls.setup(lsp_options)
-
-		lsp.zls.setup(lsp_options)
 
 		lsp.gopls.setup(vim.tbl_extend("force", lsp_options, {
 			settings = {
@@ -188,8 +224,7 @@ return {
 			},
 			formatting = {
 				format = require("lspkind").cmp_format {
-					-- mode = "symbol",
-					before = require("tailwind-tools.cmp").lspkind_format,
+					mode = "symbol",
 				},
 			},
 		}

@@ -1,5 +1,6 @@
 return {
 	"williamboman/mason.nvim",
+	tag = "v2.0.0",
 	dependencies = {
 		"WhoIsSethDaniel/mason-tool-installer.nvim",
 		"williamboman/mason-lspconfig.nvim",
@@ -16,11 +17,10 @@ return {
 				"gopls",
 				"lua_ls",
 				"prettierd",
-				"volar",
+				"vue-language-server",
 				"stylua",
 				"tailwindcss",
 				"typescript-language-server",
-				"zls",
 			},
 		}
 	end,
