@@ -6,8 +6,9 @@ return {
 		"hrsh7th/cmp-buffer",
 		"nvim-lua/plenary.nvim",
 		"L3MON4D3/LuaSnip",
+    "tailwind-tools",
 		"onsails/lspkind-nvim",
-		"roobert/tailwindcss-colorizer-cmp.nvim",
+    
 	},
 	event = { "BufReadPre", "BufNewFile" },
 	config = function()
@@ -57,86 +58,13 @@ return {
 			},
 		}))
 
-		local mason_registry = require("mason-registry")
-		-- local vue_language_server_path = mason_registry.get_package('vue-language-server'):get_install_path()
-		--     .. '/node_modules/@vue/language-server'
-
 		lsp.ts_ls.setup(vim.tbl_extend("force", lsp_options, {
 			init_options = {
-				-- plugins = {
-				--   {
-				--     name = '@vue/typescript-plugin',
-				--     location = vue_language_server_path,
-				--     languages = { 'vue' },
-				--   },
-				-- },
-			},
+							},
 			filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
 		}))
 
 		lsp.eslint.setup(lsp_options)
-
-		lsp.tailwindcss.setup(vim.tbl_extend("force", lsp_options, {
-			filetypes = {
-				"html",
-				"css",
-				"scss",
-				"javascript",
-				"javascriptreact",
-				"typescript",
-				"typescriptreact",
-				"vue",
-				"svelte",
-				"heex",
-				"eelixir",
-				"elixir",
-			},
-			init_options = {
-				userLanguages = {
-					heex = "html",
-					eelixir = "html",
-					["html.heex"] = "html",
-				},
-			},
-			settings = {
-				tailwindCSS = {
-					experimental = {
-						emmetCompletions = true,
-						classRegex = {
-							'class[:]\\s*"([^"]*)"',
-							'class: "([^"]*)"',
-						},
-						includeLanguages = {
-							heex = "html-eex",
-							elixir = "html-eex",
-						},
-					},
-				},
-			},
-		}))
-
-		-- lsp.tailwindcss.setup(vim.tbl_extend("force", lsp_options, {
-		-- 	init_options = {
-		-- 		userLanguages = {
-		-- 			heex = "html-eex",
-		-- 			elixir = "html-eex",
-		-- 		},
-		-- 	},
-		-- 	settings = {
-		-- 		tailwindCSS = {
-		-- 			emmetCompletions = true,
-		-- 			experimental = {
-		-- 				classRegex = {
-		-- 					'class[:]\\s*"([^"]*)"',
-		-- 				},
-		-- 			},
-		-- 			includeLanguages = {
-		-- 				heex = "html-eex",
-		-- 				elixir = "html-eex",
-		-- 			},
-		-- 		},
-		-- 	},
-		-- }))
 
 		-- lsp.emmet_ls.setup(vim.tbl_extend("force", lsp_options, {
 		-- filetypes = {
@@ -225,6 +153,7 @@ return {
 			formatting = {
 				format = require("lspkind").cmp_format {
 					mode = "symbol",
+          before = require("tailwind-tools.cmp").lspkind_format
 				},
 			},
 		}
