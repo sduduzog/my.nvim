@@ -57,10 +57,21 @@ return {
       },
     }))
 
+    local vue_typescript_plugin_path = vim.fn.stdpath('data')
+        .. '/mason/packages/vue-language-server/node_modules/@vue/language-server/node_modules/@vue/typescript-plugin'
+
     lsp.ts_ls.setup(vim.tbl_extend('force', lsp_options, {
       init_options = {
+        plugins = {
+          {
+            name = '@vue/typescript-plugin',
+            location = vue_typescript_plugin_path,
+            languages = { 'vue' },
+          },
+        },
       },
       filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' },
+      single_file_support = false,
     }))
 
     lsp.eslint.setup(lsp_options)
