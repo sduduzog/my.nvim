@@ -89,6 +89,12 @@ return {
         gopls = {
           staticcheck = true,
           gofumpt = true,
+          analyses = {
+            unusedparams = true,
+            shadow = true,
+            ST1000 = false,
+            ST1003 = false
+          }
         },
       },
     }))
